@@ -2,18 +2,28 @@ import sys, matplotlib.pyplot as plt, networkx as nx
 from matplotlib.patches import FancyArrowPatch
 
 # === Definición del DFA ===
-states = {"q0","q1","q2","q3","q4"}
-alphabet = {"a","b"}
-delta = {("q0","a"):"q1", 
-        ("q1","a"):"q4", 
-        ("q1","b"):"q4", 
-        ("q2","a"):"q0", 
-        ("q2","b"):"q1", 
-        ("q3","b"):"q2", 
-        ("q4","a"):"q4", 
-        ("q4","b"):"q4"}
+states = {"q0", "q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"}
+alphabet = {"a", "b", "c"}
 
-q0, F = "q0", {"q4"}
+delta = {
+    ("q0", "a"): "q1",  # Inicio -> Menú
+    ("q1", "a"): "q3",  # Menú -> Retirar
+    ("q1", "b"): "q2",  # Menú -> Depositar
+    ("q2", "a"): "q4",  # Depositar -> Ingresar tarjeta
+    ("q2", "c"): "q1",  # Depositar -> Menú (retorno)
+    ("q3", "a"): "q4",  # Retirar -> Ingresar tarjeta
+    ("q3", "c"): "q1",  # Retirar -> Menú (retorno)
+    ("q4", "a"): "q5",  # Ingresar tarjeta -> Pin
+    ("q5", "a"): "q7",  # Pin -> Ingresar monto a retirar
+    ("q5", "b"): "q6",  # Pin -> Ingresar cuenta para depositar
+    ("q5", "c"): "q5",  # Pin -> Bucle Pin
+    ("q6", "a"): "q7",  # Ingresar cuenta -> Ingresar monto
+    ("q6", "c"): "q6",  # Ingresar cuenta -> Bucle Cuenta
+    ("q7", "a"): "q8"   # Ingresar monto -> Fin
+}
+
+q0 = "q0"
+F = {"q8"}
 
 # === Simulación ===
 def run(s):
